@@ -126,7 +126,7 @@
             border-radius: 8px;
             transition: background 0.2s;
         }
-        .hamburger:hover { background: rgba(255,255,255,0.06); }
+        .hamburger:hover { background: none; }
         .hamburger span {
             display: block;
             width: 20px;
@@ -186,7 +186,7 @@
         .mobile-nav-link.active { color: #007aff; }
 
         @media (max-width: 639px) {
-            .nav-links { display: none; }
+            .nav-links { display: none !important; }
             .hamburger { display: flex; }
             .mobile-menu { display: block; }
         }
@@ -402,12 +402,12 @@
             <a href="/">
                 <img src="/assets/arclight-logo.png" alt="Arclight" class="logo-img">
             </a>
-            <div class="nav-links flex gap-2">
+            <div class="nav-links hidden sm:flex gap-2">
                 <a href="/" class="nav-link active">Home</a>
                 <a href="/services.html" class="nav-link">Services</a>
                 <a href="/contact.html" class="nav-link">Contact</a>
             </div>
-            <button class="hamburger" id="hamburger-btn" aria-label="Open menu">
+            <button class="hamburger sm:hidden" id="hamburger-btn" aria-label="Open menu">
                 <span></span><span></span><span></span>
             </button>
         </div>
@@ -560,7 +560,7 @@
     <!-- Footer -->
     <footer class="relative border-t border-white/5 mt-10 md:mt-20" style="position: relative; z-index: 10;">
         <div class="max-w-6xl mx-auto px-6 py-8 md:py-16 text-center text-gray-500">
-            <p>&copy; 2024 Arclight Electrical Services. Sydney, Australia.</p>
+            <p>&copy; 2026 Arclight Electrical Services. Sydney, Australia.</p>
         </div>
     </footer>
 
