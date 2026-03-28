@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Arclight Electrical</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+            -webkit-font-smoothing: antialiased;
+        }
+        h1, h2, h3 {
+            font-family: 'Inter', sans-serif;
+            letter-spacing: -0.03em;
+            font-weight: 700;
+        }
+
+        /* Grid Background */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.25) 1px, transparent 1px);
+            background-size: 100px 100px;
+            mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black 40%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Blue Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 122, 255, 0.8), transparent);
+            top: -200px;
+            right: -100px;
+        }
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 122, 255, 0.6), transparent);
+            bottom: 20%;
+            left: -150px;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            z-index: 100;
+            width: 90%;
+            max-width: 1100px;
+            border-radius: 20px;
+            backdrop-filter: blur(80px);
+            -webkit-backdrop-filter: blur(80px);
+        }
+        .nav-container {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 16px 28px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 122, 255, 0.1);
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        nav.nav-visible .nav-container {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .logo-img {
+            height: 32px;
+            width: auto;
+            filter: drop-shadow(0 0 20px rgba(0, 122, 255, 0.6));
+        }
+        .nav-link {
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.2s;
+            text-decoration: none;
+            padding: 8px 12px;
+        }
+        .nav-link:hover { color: #fff; }
+        .nav-link.active { color: #007aff; }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #007aff, #0051cc);
+            color: white;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s;
+            border: 1px solid rgba(0, 122, 255, 0.3);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(0, 122, 255, 0.3), 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        .btn-primary:hover::before { left: 100%; }
+        .btn-primary:hover, .btn-secondary:hover {
+            transform: scale(1.02) translateY(-2px);
+        }
+        .btn-primary:hover {
+            box-shadow: 0 0 60px rgba(0, 122, 255, 0.5), 0 12px 24px rgba(0, 0, 0, 0.3);
+        }
+        .btn-secondary {
+            background: #1a1a1a;
+            color: white;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Contact Cards */
+        .contact-card {
+            background: #111;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 32px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+            border-radius: 20px;
+        }
+        .contact-card:hover::before { opacity: 1; }
+        .contact-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(0, 122, 255, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 122, 255, 0.2), 0 0 0 1px rgba(0, 122, 255, 0.1);
+        }
+
+        /* Icons */
+        .contact-icon {
+            color: #007aff;
+            filter: drop-shadow(0 0 20px rgba(0, 122, 255, 0.6));
+            margin: 0 auto 20px;
+        }
+
+        /* Form Elements */
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+            font-family: 'Inter';
+            transition: all 0.3s;
+        }
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: rgba(0, 122, 255, 0.4);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .form-select option { background: #1a1a1a; }
+
+        /* Hero Badge */
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(0, 122, 255, 0.1);
+            border: 1px solid rgba(0, 122, 255, 0.3);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #007aff;
+            text-shadow: 0 0 20px rgba(0, 122, 255, 0.5);
+            margin-bottom: 24px;
+        }
+
+        /* Text Glow */
+        .text-glow {
+            color: #007aff;
+            text-shadow: 0 0 40px rgba(0, 122, 255, 0.6);
+        }
+
+        /* CTA Section (top hero) */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.05), rgba(0, 122, 255, 0.02));
+            border: 1px solid rgba(0, 122, 255, 0.2);
+            border-radius: 24px;
+            padding: 60px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 122, 255, 0.1), transparent 70%);
+            pointer-events: none;
+        }
+
+        /* Pulse Animation */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 40px rgba(0, 122, 255, 0.3), 0 8px 16px rgba(0, 0, 0, 0.2); }
+            50% { box-shadow: 0 0 60px rgba(0, 122, 255, 0.6), 0 8px 16px rgba(0, 0, 0, 0.2); }
+        }
+        .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+
+        /* Map Container */
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            filter: grayscale(100%) invert(90%) contrast(90%);
+        }
+
+        /* Animation initial states */
+        .hero-word {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        .hero-badge,
+        .hero-subtitle {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .section-heading {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+        }
+        .animate-card {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        .form-card {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        .map-container {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* Page fade in */
+        body { opacity: 0; }
+        body.loaded { animation: pageFadeIn 0.6s ease-out forwards; }
+        @keyframes pageFadeIn { to { opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <nav>
+        <div class="nav-container flex items-center justify-between">
+            <a href="/">
+                <img src="/assets/arclight-logo.png" alt="Arclight" class="logo-img">
+            </a>
+            <div class="flex gap-2">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/services.html" class="nav-link">Services</a>
+                <a href="/contact.html" class="nav-link active">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <div style="position: relative; z-index: 10; padding-top: 140px;">
+        <!-- Hero CTA -->
+        <section class="px-6 pb-20">
+            <div class="max-w-4xl mx-auto cta-section" style="position: relative;">
+                <div class="text-center" style="position: relative; z-index: 1;">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6" style="line-height: 1.1;">
+                        <span class="hero-word">Let's</span> <span class="hero-word">Power</span> <span class="hero-word">Your</span><br>
+                        <span class="hero-word text-glow">Vision</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-400 mb-8 max-w-2xl mx-auto hero-subtitle">
+                        Whether it's an emergency repair or a major installation, our licensed electricians are ready to help
+                    </p>
+                    <div class="flex gap-4 justify-center flex-wrap">
+                        <a href="tel:1300000000"><button class="btn-primary pulse-glow">Call 1300 ARC LIGHT</button></a>
+                        <a href="#quote-form"><button class="btn-secondary">Request Quote</button></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Cards -->
+        <section class="px-6 pb-16">
+            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 contact-cards">
+                <div class="contact-card animate-card">
+                    <i data-lucide="phone" class="contact-icon w-12 h-12"></i>
+                    <h3 class="text-lg font-semibold mb-2">Phone</h3>
+                    <a href="tel:1300000000" class="text-gray-400 hover:text-blue-400 transition text-sm">1300 ARC LIGHT</a>
+                    <p class="text-xs text-gray-500 mt-2">Mon-Fri 7am-6pm</p>
+                </div>
+
+                <div class="contact-card animate-card">
+                    <i data-lucide="mail" class="contact-icon w-12 h-12"></i>
+                    <h3 class="text-lg font-semibold mb-2">Email</h3>
+                    <a href="mailto:info@arclight.com.au" class="text-gray-400 hover:text-blue-400 transition text-sm">info@arclight.com.au</a>
+                    <p class="text-xs text-gray-500 mt-2">24hr response</p>
+                </div>
+
+                <div class="contact-card animate-card">
+                    <i data-lucide="zap" class="contact-icon w-12 h-12"></i>
+                    <h3 class="text-lg font-semibold mb-2">Emergency</h3>
+                    <a href="tel:1300000000" class="text-gray-400 hover:text-blue-400 transition text-sm">24/7 Emergency</a>
+                    <p class="text-xs text-gray-500 mt-2">Available anytime</p>
+                </div>
+            </div>
+
+            <!-- Quote Form -->
+            <div class="max-w-3xl mx-auto" id="quote-form">
+                <div class="bg-[#111] border border-white/[0.06] rounded-3xl p-12 form-card">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-3 text-center">Request a <span class="text-glow">Quote</span></h2>
+                    <p class="text-gray-400 text-sm text-center mb-8">Fill out the form and we'll get back to you within 24 hours</p>
+
+                    <form>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                            <div>
+                                <label class="block mb-2 text-sm font-medium">First Name *</label>
+                                <input type="text" class="form-input" placeholder="John" required>
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-sm font-medium">Last Name *</label>
+                                <input type="text" class="form-input" placeholder="Smith" required>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                            <div>
+                                <label class="block mb-2 text-sm font-medium">Email *</label>
+                                <input type="email" class="form-input" placeholder="john@example.com" required>
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-sm font-medium">Phone *</label>
+                                <input type="tel" class="form-input" placeholder="0400 000 000" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-5">
+                            <label class="block mb-2 text-sm font-medium">Service Type *</label>
+                            <select class="form-select" required>
+                                <option value="">Select a service</option>
+                                <option>Residential Electrical</option>
+                                <option>Commercial Electrical</option>
+                                <option>Emergency Repair</option>
+                                <option>LED Lighting</option>
+                                <option>Solar & EV Charging</option>
+                                <option>Testing & Inspection</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-5">
+                            <label class="block mb-2 text-sm font-medium">Project Details *</label>
+                            <textarea class="form-textarea" placeholder="Tell us about your electrical needs..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-primary mt-4" style="width: 100%;">Submit Request</button>
+                        <p class="text-xs text-gray-500 text-center mt-6">By submitting, you agree to our privacy policy</p>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Map -->
+        <section class="px-6 py-20">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-5xl font-bold mb-4 section-heading">Servicing All of <span class="text-glow">Sydney</span></h2>
+                    <p class="text-lg text-gray-400 max-w-2xl mx-auto map-subtitle" style="opacity: 0; transform: translateY(20px);">From the Northern Beaches to Sutherland Shire, we're proud to serve residential and commercial clients across greater Sydney</p>
+                </div>
+                <div class="map-container">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d424143.47488690426!2d150.65176659453633!3d-33.847926699999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b129838f39a743f%3A0x3017d681632a850!2sSydney%20NSW%2C%20Australia!5e0!3m2!1sen!2sus!4v1647284976837!5m2!1sen!2sus"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </section>
+
+        <footer class="border-t border-white/5 mt-20">
+            <div class="max-w-6xl mx-auto px-6 py-12 text-center text-gray-500 text-sm">
+                <p>&copy; 2024 Arclight Electrical Services. Sydney, Australia.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Page fade in
+        document.body.classList.add('loaded');
+
+        // Nav slide down
+        setTimeout(function() {
+            document.querySelector('nav').classList.add('nav-visible');
+        }, 200);
+
+        window.addEventListener('load', function() {
+            const heroWords = document.querySelectorAll('.hero-word');
+
+            // Hero word-by-word
+            heroWords.forEach(function(word, index) {
+                gsap.to(word, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    delay: 0.3 + (index * 0.1),
+                    ease: 'power2.out'
+                });
+            });
+
+            // Hero subtitle after words
+            gsap.to('.hero-subtitle', {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                delay: 0.3 + (heroWords.length * 0.1) + 0.2,
+                ease: 'power2.out'
+            });
+
+            // Contact cards stagger
+            gsap.to('.animate-card', {
+                scrollTrigger: {
+                    trigger: '.contact-cards',
+                    start: 'top 80%',
+                    once: true
+                },
+                opacity: 1,
+                y: 0,
+                stagger: 0.15,
+                duration: 0.8,
+                ease: 'power2.out'
+            });
+
+            // Form card
+            gsap.to('.form-card', {
+                scrollTrigger: {
+                    trigger: '.form-card',
+                    start: 'top 80%',
+                    once: true
+                },
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power2.out'
+            });
+
+            // Section headings
+            document.querySelectorAll('.section-heading').forEach(function(heading) {
+                gsap.to(heading, {
+                    scrollTrigger: {
+                        trigger: heading,
+                        start: 'top 80%',
+                        once: true
+                    },
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    duration: 0.8,
+                    ease: 'power2.out'
+                });
+            });
+
+            // Map subtitle
+            gsap.to('.map-subtitle', {
+                scrollTrigger: {
+                    trigger: '.map-subtitle',
+                    start: 'top 80%',
+                    once: true
+                },
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power2.out'
+            });
+
+            // Map container
+            gsap.to('.map-container', {
+                scrollTrigger: {
+                    trigger: '.map-container',
+                    start: 'top 80%',
+                    once: true
+                },
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power2.out'
+            });
+
+            // Parallax orbs
+            gsap.to('.orb-1', {
+                scrollTrigger: {
+                    trigger: 'body',
+                    start: 'top top',
+                    end: 'bottom bottom',
+                    scrub: 1
+                },
+                y: 300,
+                x: -100,
+                ease: 'none'
+            });
+
+            gsap.to('.orb-2', {
+                scrollTrigger: {
+                    trigger: 'body',
+                    start: 'top top',
+                    end: 'bottom bottom',
+                    scrub: 1
+                },
+                y: -200,
+                x: 100,
+                ease: 'none'
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                var target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

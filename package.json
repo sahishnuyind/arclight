@@ -1,0 +1,20 @@
+{
+  "name": "arclight",
+  "version": "1.0.0",
+  "description": "Arclight electrician service website",
+  "type": "module",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "serve": "node serve.mjs",
+    "screenshot": "node screenshot.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^24.40.0"
+  }
+}

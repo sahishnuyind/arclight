@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services - Arclight Electrical</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+            -webkit-font-smoothing: antialiased;
+        }
+        h1, h2, h3 {
+            font-family: 'Inter', sans-serif;
+            letter-spacing: -0.03em;
+            font-weight: 700;
+        }
+
+        /* Grid Background */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.25) 1px, transparent 1px);
+            background-size: 100px 100px;
+            mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black 40%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Blue Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 122, 255, 0.8), transparent);
+            top: -200px;
+            right: -100px;
+        }
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 122, 255, 0.6), transparent);
+            bottom: 20%;
+            left: -150px;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            z-index: 100;
+            width: 90%;
+            max-width: 1100px;
+            border-radius: 20px;
+            backdrop-filter: blur(80px);
+            -webkit-backdrop-filter: blur(80px);
+        }
+        .nav-container {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 16px 28px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 122, 255, 0.1);
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        nav.nav-visible .nav-container {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .logo-img {
+            height: 32px;
+            width: auto;
+            filter: drop-shadow(0 0 20px rgba(0, 122, 255, 0.6));
+        }
+        .nav-link {
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.2s;
+            text-decoration: none;
+            padding: 8px 12px;
+        }
+        .nav-link:hover { color: #fff; }
+        .nav-link.active { color: #007aff; }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #007aff, #0051cc);
+            color: white;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s;
+            border: 1px solid rgba(0, 122, 255, 0.3);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(0, 122, 255, 0.3), 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        .btn-primary:hover::before { left: 100%; }
+        .btn-primary:hover, .btn-secondary:hover {
+            transform: scale(1.02) translateY(-2px);
+        }
+        .btn-primary:hover {
+            box-shadow: 0 0 60px rgba(0, 122, 255, 0.5), 0 12px 24px rgba(0, 0, 0, 0.3);
+        }
+        .btn-secondary {
+            background: #1a1a1a;
+            color: white;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Service Cards */
+        .service-card {
+            background: #111;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            position: relative;
+        }
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+        }
+        .service-card:hover::before { opacity: 1; }
+        .service-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(0, 122, 255, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 122, 255, 0.2), 0 0 0 1px rgba(0, 122, 255, 0.1);
+        }
+        .img-wrapper {
+            overflow: hidden;
+            height: 240px;
+        }
+        .service-image {
+            height: 320px;
+            width: 100%;
+            object-fit: cover;
+            display: block;
+            will-change: transform;
+        }
+
+        /* Icons */
+        .service-icon {
+            color: #007aff;
+            filter: drop-shadow(0 0 20px rgba(0, 122, 255, 0.6));
+            margin-bottom: 16px;
+        }
+
+        /* Hero Badge */
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(0, 122, 255, 0.1);
+            border: 1px solid rgba(0, 122, 255, 0.3);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #007aff;
+            text-shadow: 0 0 20px rgba(0, 122, 255, 0.5);
+            margin-bottom: 24px;
+        }
+
+        /* Text Glow */
+        .text-glow {
+            color: #007aff;
+            text-shadow: 0 0 40px rgba(0, 122, 255, 0.6);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.05), rgba(0, 122, 255, 0.02));
+            border: 1px solid rgba(0, 122, 255, 0.2);
+            border-radius: 24px;
+            padding: 60px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 122, 255, 0.1), transparent 70%);
+            pointer-events: none;
+        }
+
+        /* Pulse Animation */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 40px rgba(0, 122, 255, 0.3), 0 8px 16px rgba(0, 0, 0, 0.2); }
+            50% { box-shadow: 0 0 60px rgba(0, 122, 255, 0.6), 0 8px 16px rgba(0, 0, 0, 0.2); }
+        }
+        .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+
+        /* Animation initial states */
+        .hero-word {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        .hero-badge,
+        .hero-subtitle {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .section-heading {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+        }
+        .animate-card {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        .cta-content {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* Page fade in */
+        body { opacity: 0; }
+        body.loaded { animation: pageFadeIn 0.6s ease-out forwards; }
+        @keyframes pageFadeIn { to { opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <nav>
+        <div class="nav-container flex items-center justify-between">
+            <a href="/">
+                <img src="/assets/arclight-logo.png" alt="Arclight" class="logo-img">
+            </a>
+            <div class="flex gap-2">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/services.html" class="nav-link active">Services</a>
+                <a href="/contact.html" class="nav-link">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <div style="position: relative; z-index: 10; padding-top: 140px;">
+        <!-- Hero -->
+        <section class="px-6 pb-20">
+            <div class="max-w-6xl mx-auto text-center mb-16">
+                <h1 class="text-5xl md:text-7xl font-bold mb-6" style="line-height: 1.05;">
+                    <span class="hero-word">Electrical</span> <span class="hero-word">Excellence</span><br>
+                    <span class="hero-word text-glow">Delivered</span>
+                </h1>
+                <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto hero-subtitle">
+                    From residential installations to commercial projects, we deliver premium electrical solutions across Sydney
+                </p>
+            </div>
+
+            <!-- Services Grid -->
+            <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 services-grid">
+                <div class="service-card animate-card">
+                    <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1581094271901-8022df4466f9?w=800&h=600&fit=crop" alt="Residential Services" class="service-image"></div>
+                    <div class="p-8">
+                        <i data-lucide="home" class="service-icon w-10 h-10"></i>
+                        <h3 class="text-2xl font-bold mb-3">Residential</h3>
+                        <p class="text-gray-400 text-sm mb-4">Complete home electrical services tailored to your needs</p>
+                        <ul class="text-sm text-gray-400 space-y-2">
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                                Home rewiring & renovations
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                                Lighting design & installation
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                                Switchboard upgrades
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card animate-card">
+                    <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=600&fit=crop" alt="Commercial Services" class="service-image"></div>
+                    <div class="p-8">
+                        <i data-lucide="building-2" class="service-icon w-10 h-10"></i>
+                        <h3 class="text-2xl font-bold mb-3">Commercial</h3>
+                        <p class="text-gray-400 text-sm mb-4">Professional electrical solutions for businesses</p>
+                        <ul class="text-sm text-gray-400 space-y-2">
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                                Office fit-outs & installations
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                                Data & network cabling
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                                Emergency lighting systems
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card animate-card">
+                    <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&h=600&fit=crop" alt="Emergency Services" class="service-image"></div>
+                    <div class="p-8">
+                        <i data-lucide="alert-circle" class="service-icon w-10 h-10"></i>
+                        <h3 class="text-2xl font-bold mb-3">Emergency</h3>
+                        <p class="text-gray-400 text-sm mb-4">24/7 emergency response when you need it most</p>
+                        <ul class="text-sm text-gray-400 space-y-2">
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                                Rapid response team
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                                Power outage solutions
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                                Safety hazard resolution
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card animate-card">
+                    <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop" alt="LED Lighting" class="service-image"></div>
+                    <div class="p-8">
+                        <i data-lucide="lightbulb" class="service-icon w-10 h-10"></i>
+                        <h3 class="text-2xl font-bold mb-3">LED Lighting</h3>
+                        <p class="text-gray-400 text-sm mb-4">Energy-efficient lighting solutions</p>
+                        <ul class="text-sm text-gray-400 space-y-2">
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                                LED installations & upgrades
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                                Smart lighting systems
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                                Custom lighting design
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card animate-card">
+                    <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&h=600&fit=crop" alt="Solar & EV" class="service-image"></div>
+                    <div class="p-8">
+                        <i data-lucide="sun" class="service-icon w-10 h-10"></i>
+                        <h3 class="text-2xl font-bold mb-3">Solar & EV</h3>
+                        <p class="text-gray-400 text-sm mb-4">Sustainable energy for the future</p>
+                        <ul class="text-sm text-gray-400 space-y-2">
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                                Solar panel installation
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                                Battery storage systems
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                                EV charger installation
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card animate-card">
+                    <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=800&h=600&fit=crop" alt="Inspections" class="service-image"></div>
+                    <div class="p-8">
+                        <i data-lucide="search" class="service-icon w-10 h-10"></i>
+                        <h3 class="text-2xl font-bold mb-3">Inspections</h3>
+                        <p class="text-gray-400 text-sm mb-4">Safety testing & compliance services</p>
+                        <ul class="text-sm text-gray-400 space-y-2">
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                                Electrical safety inspections
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                                Test & tag services
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-blue-400"></i>
+                                Thermal imaging surveys
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="px-6 py-20">
+            <div class="max-w-4xl mx-auto cta-section" style="position: relative;">
+                <div class="text-center cta-content" style="position: relative; z-index: 1;">
+                    <h2 class="text-3xl md:text-5xl font-bold mb-4">Ready to transform your space?</h2>
+                    <p class="text-lg text-gray-400 mb-8">Get a free quote and expert consultation from Sydney's leading electricians</p>
+                    <div class="flex gap-4 justify-center flex-wrap">
+                        <a href="/contact.html"><button class="btn-primary pulse-glow">Request Free Quote</button></a>
+                        <a href="tel:1300000000"><button class="btn-secondary">Call Now</button></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="border-t border-white/5 mt-20">
+            <div class="max-w-6xl mx-auto px-6 py-12 text-center text-gray-500 text-sm">
+                <p>&copy; 2024 Arclight Electrical Services. Sydney, Australia.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Page fade in
+        document.body.classList.add('loaded');
+
+        // Nav slide down
+        setTimeout(function() {
+            document.querySelector('nav').classList.add('nav-visible');
+        }, 200);
+
+        window.addEventListener('load', function() {
+            const heroWords = document.querySelectorAll('.hero-word');
+
+            // Hero word-by-word
+            heroWords.forEach(function(word, index) {
+                gsap.to(word, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    delay: 0.3 + (index * 0.1),
+                    ease: 'power2.out'
+                });
+            });
+
+            // Hero subtitle after words
+            gsap.to('.hero-subtitle', {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                delay: 0.3 + (heroWords.length * 0.1) + 0.2,
+                ease: 'power2.out'
+            });
+
+            // Cards stagger fade up
+            gsap.to('.animate-card', {
+                scrollTrigger: {
+                    trigger: '.services-grid',
+                    start: 'top 80%',
+                    once: true
+                },
+                opacity: 1,
+                y: 0,
+                stagger: 0.15,
+                duration: 0.8,
+                ease: 'power2.out'
+            });
+
+            // Image parallax - contained within img-wrapper
+            document.querySelectorAll('.service-image').forEach(function(img) {
+                gsap.fromTo(img,
+                    { y: -40 },
+                    {
+                        y: 40,
+                        scrollTrigger: {
+                            trigger: img.parentElement,
+                            start: 'top bottom',
+                            end: 'bottom top',
+                            scrub: true
+                        },
+                        ease: 'none'
+                    }
+                );
+            });
+
+            // CTA fade up
+            gsap.to('.cta-content', {
+                scrollTrigger: {
+                    trigger: '.cta-content',
+                    start: 'top 80%',
+                    once: true
+                },
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power2.out'
+            });
+
+            // Parallax orbs
+            gsap.to('.orb-1', {
+                scrollTrigger: {
+                    trigger: 'body',
+                    start: 'top top',
+                    end: 'bottom bottom',
+                    scrub: 1
+                },
+                y: 300,
+                x: -100,
+                ease: 'none'
+            });
+
+            gsap.to('.orb-2', {
+                scrollTrigger: {
+                    trigger: 'body',
+                    start: 'top top',
+                    end: 'bottom bottom',
+                    scrub: 1
+                },
+                y: -200,
+                x: 100,
+                ease: 'none'
+            });
+        });
+    </script>
+</body>
+</html>

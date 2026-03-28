@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arclight - Premium Electrical Services Sydney</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+            font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Inter', sans-serif;
+            letter-spacing: -0.03em;
+            font-weight: 700;
+        }
+
+        /* Grid Background */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.25) 1px, transparent 1px);
+            background-size: 100px 100px;
+            mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black 40%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Blue Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 122, 255, 0.8), transparent);
+            top: -200px;
+            right: -100px;
+        }
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 122, 255, 0.6), transparent);
+            bottom: 20%;
+            left: -150px;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            z-index: 100;
+            width: 90%;
+            max-width: 1100px;
+            border-radius: 20px;
+            backdrop-filter: blur(80px);
+            -webkit-backdrop-filter: blur(80px);
+        }
+        .nav-container {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 16px 28px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 122, 255, 0.1);
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        nav.nav-visible .nav-container {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .logo-img {
+            height: 32px;
+            width: auto;
+            filter: drop-shadow(0 0 20px rgba(0, 122, 255, 0.6));
+        }
+        .nav-link {
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.2s;
+            text-decoration: none;
+            padding: 8px 12px;
+        }
+        .nav-link:hover { color: #fff; }
+        .nav-link.active {
+            color: #007aff;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #007aff, #0051cc);
+            color: white;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s;
+            border: 1px solid rgba(0, 122, 255, 0.3);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(0, 122, 255, 0.3), 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        .btn-primary:hover {
+            box-shadow: 0 0 60px rgba(0, 122, 255, 0.5), 0 12px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: #1a1a1a;
+            color: white;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .btn-secondary:hover {
+            background: #2a2a2a;
+        }
+
+        /* Hero */
+        .hero-title {
+            font-size: clamp(48px, 8vw, 96px);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.04em;
+        }
+
+        .blue-glow-text {
+            color: #007aff;
+            text-shadow: 0 0 80px rgba(0, 122, 255, 0.6);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(0, 122, 255, 0.1);
+            border: 1px solid rgba(0, 122, 255, 0.3);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #007aff;
+            text-shadow: 0 0 20px rgba(0, 122, 255, 0.5);
+        }
+
+        /* Stats */
+        .stat-number {
+            font-size: clamp(40px, 6vw, 72px);
+            font-weight: 900;
+            color: #007aff;
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+        .stat-symbol {
+            color: #ffffff;
+        }
+
+        /* Service Card */
+        .service-card {
+            background: #111;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+        }
+        .img-wrapper {
+            overflow: hidden;
+            height: 240px;
+        }
+        .service-image {
+            height: 320px;
+            width: 100%;
+            object-fit: cover;
+            display: block;
+            will-change: transform;
+        }
+
+        /* Why Choose Us - 2x2 Grid */
+        .why-card {
+            background: #111;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 20px;
+            padding: 32px;
+        }
+        .why-card-icon {
+            width: 26px;
+            height: 26px;
+            color: #007aff;
+            margin-bottom: 16px;
+            display: block;
+        }
+        .why-card-heading {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+        .why-card-text {
+            font-size: 0.9rem;
+            line-height: 1.65;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 60px;
+            position: relative;
+        }
+
+        /* Pulse Animation */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 40px rgba(0, 122, 255, 0.3), 0 8px 16px rgba(0, 0, 0, 0.2); }
+            50% { box-shadow: 0 0 60px rgba(0, 122, 255, 0.6), 0 8px 16px rgba(0, 0, 0, 0.2); }
+        }
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        /* Animation initial states */
+        .hero-word {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .hero-text,
+        .hero-btns {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .section-heading {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+        }
+
+        .animate-card {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        .cta-content {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* Button hover effects */
+        .btn-primary, .btn-secondary {
+            transform-origin: center;
+        }
+        .btn-primary:hover, .btn-secondary:hover {
+            transform: scale(1.02) translateY(-2px);
+        }
+
+        /* Page fade in */
+        body {
+            opacity: 0;
+        }
+        body.loaded {
+            animation: pageFadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes pageFadeIn {
+            to { opacity: 1; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container flex items-center justify-between">
+            <a href="/">
+                <img src="/assets/arclight-logo.png" alt="Arclight" class="logo-img">
+            </a>
+            <div class="flex gap-2">
+                <a href="/" class="nav-link active">Home</a>
+                <a href="/services.html" class="nav-link">Services</a>
+                <a href="/contact.html" class="nav-link">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center px-6" style="position: relative; z-index: 10;">
+        <div class="max-w-6xl mx-auto text-center">
+            <h1 class="hero-title mb-6">
+                <span class="hero-word blue-glow-text">Switched</span> <span class="hero-word blue-glow-text">On.</span><br>
+                <span class="hero-word">Every</span> <span class="hero-word">Time.</span>
+            </h1>
+            <p class="hero-text text-xl text-gray-400 max-w-2xl mx-auto mb-12" style="line-height: 1.44;">
+                Professional electrical services you can trust. From residential repairs to commercial installations,
+                we deliver excellence with every connection.
+            </p>
+            <div class="hero-btns flex flex-wrap gap-4 justify-center">
+                <a href="/contact.html"><button class="btn-primary">Get Started</button></a>
+                <a href="/services.html"><button class="btn-secondary">View Services</button></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="relative px-6 py-40" style="position: relative; z-index: 10;">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-16">
+                <div class="stat-item text-center">
+                    <div class="stat-number">
+                        <span class="counter" data-target="2500">0</span><span class="stat-symbol">+</span>
+                    </div>
+                    <p class="text-gray-400">Projects Completed</p>
+                </div>
+                <div class="stat-item text-center">
+                    <div class="stat-number">
+                        <span class="counter" data-target="15">0</span>
+                    </div>
+                    <p class="text-gray-400">Years Experience</p>
+                </div>
+                <div class="stat-item text-center">
+                    <div class="stat-number">
+                        <span class="counter" data-target="100">0</span><span class="stat-symbol">%</span>
+                    </div>
+                    <p class="text-gray-400">Licensed & Insured</p>
+                </div>
+                <div class="stat-item text-center">
+                    <div class="stat-number">24/7</div>
+                    <p class="text-gray-400">Emergency Service</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="relative py-20" style="position: relative; z-index: 10;">
+        <div class="max-w-6xl mx-auto text-center mb-12 px-6">
+            <h2 class="text-5xl md:text-7xl font-bold mb-4 section-heading">Why Choose <span class="blue-glow-text">Arclight</span></h2>
+            <p class="text-lg text-gray-400 max-w-2xl mx-auto section-heading">
+                We combine technical expertise with outstanding service
+            </p>
+        </div>
+
+        <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-6 why-grid">
+            <div class="why-card animate-card">
+                <i data-lucide="zap" class="why-card-icon"></i>
+                <h3 class="why-card-heading">Fast Response</h3>
+                <p class="why-card-text">Same-day service for most jobs. We value your time and respond to your electrical needs with speed and professionalism.</p>
+            </div>
+            <div class="why-card animate-card">
+                <i data-lucide="shield-check" class="why-card-icon"></i>
+                <h3 class="why-card-heading">Fully Licensed</h3>
+                <p class="why-card-text">Licensed, insured, and background-checked professionals you can trust with your property and family.</p>
+            </div>
+            <div class="why-card animate-card">
+                <i data-lucide="award" class="why-card-icon"></i>
+                <h3 class="why-card-heading">Quality Guaranteed</h3>
+                <p class="why-card-text">Comprehensive warranties on all installations. Work done right, every single time with industry-leading guarantees.</p>
+            </div>
+            <div class="why-card animate-card">
+                <i data-lucide="star" class="why-card-icon"></i>
+                <h3 class="why-card-heading">5-Star Rated</h3>
+                <p class="why-card-text">Hundreds of satisfied customers across Sydney. Our reputation for excellence speaks for itself.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Preview -->
+    <section class="relative px-6 py-40" style="position: relative; z-index: 10;">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-32">
+                <h2 class="text-5xl md:text-7xl font-bold mb-6 section-heading">Our <span class="blue-glow-text">Services</span></h2>
+                <p class="text-2xl text-gray-400 max-w-3xl mx-auto section-heading">
+                    Comprehensive electrical solutions for every need
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 services-grid">
+                <div class="service-card animate-card">
+                    <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1000&h=600&fit=crop" alt="Residential" class="service-image"></div>
+                    <div class="p-6">
+                        <i data-lucide="home" class="w-8 h-8 mb-4" style="color: #007aff;"></i>
+                        <h3 class="text-2xl font-bold mb-4">Residential</h3>
+                        <p class="text-gray-400 mb-5 leading-relaxed text-sm">Complete electrical solutions for your home, from rewiring to smart home installations. We bring modern technology to your living space.</p>
+                        <a href="/services.html" class="text-blue-400 hover:text-blue-300 font-semibold inline-flex items-center gap-2 text-sm">
+                            Learn more <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="service-card animate-card">
+                    <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1000&h=600&fit=crop" alt="Commercial" class="service-image"></div>
+                    <div class="p-6">
+                        <i data-lucide="building-2" class="w-8 h-8 mb-4" style="color: #007aff;"></i>
+                        <h3 class="text-2xl font-bold mb-4">Commercial</h3>
+                        <p class="text-gray-400 mb-5 leading-relaxed text-sm">Professional electrical services for businesses, offices, and commercial properties. Keep your business powered and productive.</p>
+                        <a href="/services.html" class="text-blue-400 hover:text-blue-300 font-semibold inline-flex items-center gap-2 text-sm">
+                            Learn more <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="relative px-6 py-40" style="position: relative; z-index: 10;">
+        <div class="max-w-5xl mx-auto cta-section" style="position: relative;">
+            <div class="text-center cta-content" style="position: relative; z-index: 1;">
+                <h2 class="text-4xl md:text-6xl font-bold mb-8">
+                    Ready to <span class="blue-glow-text">Get Started?</span>
+                </h2>
+                <p class="text-2xl text-gray-400 mb-12 max-w-3xl mx-auto">
+                    Contact us today for a free quote and experience the Arclight difference
+                </p>
+                <div class="flex flex-wrap gap-6 justify-center">
+                    <a href="/contact.html"><button class="btn-primary pulse-glow">Request a Quote</button></a>
+                    <a href="tel:1300000000"><button class="btn-secondary">Call 1300 ARC LIGHT</button></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="relative border-t border-white/5 mt-20" style="position: relative; z-index: 10;">
+        <div class="max-w-6xl mx-auto px-6 py-16 text-center text-gray-500">
+            <p>&copy; 2024 Arclight Electrical Services. Sydney, Australia.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons FIRST - before any GSAP
+        lucide.createIcons();
+
+        // Register GSAP
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Wait for DOM to be fully loaded
+        // Page fade in
+        document.body.classList.add('loaded');
+
+        // Navigation slide down
+        setTimeout(function() {
+            document.querySelector('nav').classList.add('nav-visible');
+        }, 200);
+
+        window.addEventListener('load', function() {
+            console.log('Page loaded, initializing animations');
+
+            // Hero section - word by word animation
+            const heroWords = document.querySelectorAll('.hero-word');
+            heroWords.forEach(function(word, index) {
+                gsap.to(word, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    delay: 0.3 + (index * 0.1),
+                    ease: 'power2.out'
+                });
+            });
+
+            // Hero text and buttons - after headline
+            gsap.to('.hero-text', {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                delay: 0.3 + (heroWords.length * 0.1) + 0.2,
+                ease: 'power2.out'
+            });
+
+            gsap.to('.hero-btns', {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                delay: 0.3 + (heroWords.length * 0.1) + 0.4,
+                ease: 'power2.out'
+            });
+
+            // Stats - Counter animation
+            gsap.to('.stat-item', {
+                scrollTrigger: {
+                    trigger: '.stat-item',
+                    start: 'top 80%',
+                    once: true,
+                    onEnter: function() {
+                        // Trigger counter animations
+                        document.querySelectorAll('.counter').forEach(function(counter) {
+                            animateCounter(counter);
+                        });
+                    }
+                },
+                opacity: 1,
+                y: 0,
+                stagger: 0.2,
+                duration: 0.8,
+                ease: 'power3.out'
+            });
+
+            // Counter animation function
+            function animateCounter(element) {
+                const target = parseInt(element.getAttribute('data-target'));
+                const duration = 2000; // 2 seconds
+                const increment = target / (duration / 16); // 60fps
+                let current = 0;
+
+                const timer = setInterval(function() {
+                    current += increment;
+                    if (current >= target) {
+                        element.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        element.textContent = Math.floor(current);
+                    }
+                }, 16);
+            }
+
+            // Section headings - fade up and scale
+            document.querySelectorAll('.section-heading').forEach(function(heading) {
+                gsap.to(heading, {
+                    scrollTrigger: {
+                        trigger: heading,
+                        start: 'top 80%',
+                        once: true
+                    },
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    duration: 0.8,
+                    ease: 'power2.out'
+                });
+            });
+
+            // Why cards - stagger fade up
+            gsap.to('.why-grid .animate-card', {
+                scrollTrigger: {
+                    trigger: '.why-grid',
+                    start: 'top 80%',
+                    once: true
+                },
+                opacity: 1,
+                y: 0,
+                stagger: 0.15,
+                duration: 0.8,
+                ease: 'power2.out'
+            });
+
+            // Service cards - stagger fade up
+            gsap.to('.services-grid .animate-card', {
+                scrollTrigger: {
+                    trigger: '.services-grid',
+                    start: 'top 80%',
+                    once: true
+                },
+                opacity: 1,
+                y: 0,
+                stagger: 0.15,
+                duration: 0.8,
+                ease: 'power2.out'
+            });
+
+            // CTA fade up
+            gsap.to('.cta-content', {
+                scrollTrigger: {
+                    trigger: '.cta-content',
+                    start: 'top 80%',
+                    once: true
+                },
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power2.out'
+            });
+
+            // Image parallax - contained within img-wrapper
+            document.querySelectorAll('.service-image').forEach(function(img) {
+                gsap.fromTo(img,
+                    { y: -40 },
+                    {
+                        y: 40,
+                        scrollTrigger: {
+                            trigger: img.parentElement,
+                            start: 'top bottom',
+                            end: 'bottom top',
+                            scrub: true
+                        },
+                        ease: 'none'
+                    }
+                );
+            });
+
+            // Parallax orbs
+            gsap.to('.orb-1', {
+                scrollTrigger: {
+                    trigger: 'body',
+                    start: 'top top',
+                    end: 'bottom bottom',
+                    scrub: 1
+                },
+                y: 400,
+                x: -150
+            });
+
+            gsap.to('.orb-2', {
+                scrollTrigger: {
+                    trigger: 'body',
+                    start: 'top top',
+                    end: 'bottom bottom',
+                    scrub: 1
+                },
+                y: -300,
+                x: 150
+            });
+
+            console.log('All animations initialized');
+        });
+    </script>
+</body>
+</html>
