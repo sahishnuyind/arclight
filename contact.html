@@ -235,9 +235,12 @@
             background: linear-gradient(135deg, rgba(0, 122, 255, 0.05), rgba(0, 122, 255, 0.02));
             border: 1px solid rgba(0, 122, 255, 0.2);
             border-radius: 24px;
-            padding: 60px 40px;
+            padding: 40px 24px;
             position: relative;
             overflow: hidden;
+        }
+        @media (min-width: 640px) {
+            .cta-section { padding: 60px 40px; }
         }
         .cta-section::before {
             content: '';
@@ -258,11 +261,14 @@
         .map-container {
             position: relative;
             width: 100%;
-            height: 500px;
+            height: 280px;
             border-radius: 20px;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.06);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        @media (min-width: 640px) {
+            .map-container { height: 500px; }
         }
         .map-container iframe {
             width: 100%;
@@ -323,29 +329,29 @@
         </div>
     </nav>
 
-    <div style="position: relative; z-index: 10; padding-top: 140px;">
+    <div style="position: relative; z-index: 10;" class="pt-28 md:pt-36">
         <!-- Hero CTA -->
-        <section class="px-6 pb-20">
+        <section class="px-6 pb-10 md:pb-20">
             <div class="max-w-4xl mx-auto cta-section" style="position: relative;">
                 <div class="text-center" style="position: relative; z-index: 1;">
-                    <h1 class="text-4xl md:text-6xl font-bold mb-6" style="line-height: 1.1;">
+                    <h1 class="text-3xl md:text-6xl font-bold mb-4 md:mb-6" style="line-height: 1.1;">
                         <span class="hero-word">Let's</span> <span class="hero-word">Power</span> <span class="hero-word">Your</span><br>
                         <span class="hero-word text-glow">Vision</span>
                     </h1>
-                    <p class="text-lg md:text-xl text-gray-400 mb-8 max-w-2xl mx-auto hero-subtitle">
+                    <p class="text-sm md:text-xl text-gray-400 mb-6 md:mb-8 max-w-2xl mx-auto hero-subtitle">
                         Whether it's an emergency repair or a major installation, our licensed electricians are ready to help
                     </p>
-                    <div class="flex gap-4 justify-center flex-wrap">
-                        <a href="tel:1300000000"><button class="btn-primary pulse-glow">Call 1300 ARC LIGHT</button></a>
-                        <a href="#quote-form"><button class="btn-secondary">Request Quote</button></a>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                        <a href="tel:1300000000" class="w-full sm:w-auto"><button class="btn-primary pulse-glow w-full sm:w-auto">Call 1300 ARC LIGHT</button></a>
+                        <a href="#quote-form" class="w-full sm:w-auto"><button class="btn-secondary w-full sm:w-auto">Request Quote</button></a>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Contact Cards -->
-        <section class="px-6 pb-16">
-            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 contact-cards">
+        <section class="px-6 pb-10 md:pb-16">
+            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 md:mb-16 contact-cards">
                 <div class="contact-card animate-card">
                     <i data-lucide="phone" class="contact-icon w-12 h-12"></i>
                     <h3 class="text-lg font-semibold mb-2">Phone</h3>
@@ -370,7 +376,7 @@
 
             <!-- Quote Form -->
             <div class="max-w-3xl mx-auto" id="quote-form">
-                <div class="bg-[#111] border border-white/[0.06] rounded-3xl p-12 form-card">
+                <div class="bg-[#111] border border-white/[0.06] rounded-3xl p-6 md:p-12 form-card">
                     <h2 class="text-3xl md:text-4xl font-bold mb-3 text-center">Request a <span class="text-glow">Quote</span></h2>
                     <p class="text-gray-400 text-sm text-center mb-8">Fill out the form and we'll get back to you within 24 hours</p>
 
@@ -423,9 +429,9 @@
         </section>
 
         <!-- Map -->
-        <section class="px-6 py-20">
+        <section class="px-6 py-10 md:py-20">
             <div class="max-w-6xl mx-auto">
-                <div class="text-center mb-12">
+                <div class="text-center mb-8 md:mb-12">
                     <h2 class="text-3xl md:text-5xl font-bold mb-4 section-heading">Servicing All of <span class="text-glow">Sydney</span></h2>
                     <p class="text-lg text-gray-400 max-w-2xl mx-auto map-subtitle" style="opacity: 0; transform: translateY(20px);">From the Northern Beaches to Sutherland Shire, we're proud to serve residential and commercial clients across greater Sydney</p>
                 </div>
@@ -440,8 +446,8 @@
             </div>
         </section>
 
-        <footer class="border-t border-white/5 mt-20">
-            <div class="max-w-6xl mx-auto px-6 py-12 text-center text-gray-500 text-sm">
+        <footer class="border-t border-white/5 mt-10 md:mt-20">
+            <div class="max-w-6xl mx-auto px-6 py-8 md:py-12 text-center text-gray-500 text-sm">
                 <p>&copy; 2024 Arclight Electrical Services. Sydney, Australia.</p>
             </div>
         </footer>

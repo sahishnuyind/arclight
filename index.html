@@ -250,8 +250,11 @@
 
         /* CTA Section */
         .cta-section {
-            padding: 80px 60px;
+            padding: 40px 20px;
             position: relative;
+        }
+        @media (min-width: 640px) {
+            .cta-section { padding: 80px 60px; }
         }
 
         /* Pulse Animation */
@@ -343,17 +346,17 @@
                 Professional electrical services you can trust. From residential repairs to commercial installations,
                 we deliver excellence with every connection.
             </p>
-            <div class="hero-btns flex flex-wrap gap-4 justify-center">
-                <a href="/contact.html"><button class="btn-primary">Get Started</button></a>
-                <a href="/services.html"><button class="btn-secondary">View Services</button></a>
+            <div class="hero-btns flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="/contact.html" class="w-full sm:w-auto"><button class="btn-primary w-full sm:w-auto">Get Started</button></a>
+                <a href="/services.html" class="w-full sm:w-auto"><button class="btn-secondary w-full sm:w-auto">View Services</button></a>
             </div>
         </div>
     </section>
 
     <!-- Stats -->
-    <section class="relative px-6 py-40" style="position: relative; z-index: 10;">
+    <section class="relative px-6 py-16 md:py-40" style="position: relative; z-index: 10;">
         <div class="max-w-6xl mx-auto">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-16">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16">
                 <div class="stat-item text-center">
                     <div class="stat-number">
                         <span class="counter" data-target="2500">0</span><span class="stat-symbol">+</span>
@@ -414,11 +417,11 @@
     </section>
 
     <!-- Services Preview -->
-    <section class="relative px-6 py-40" style="position: relative; z-index: 10;">
+    <section class="relative px-6 py-16 md:py-40" style="position: relative; z-index: 10;">
         <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-32">
+            <div class="text-center mb-10 md:mb-24">
                 <h2 class="text-5xl md:text-7xl font-bold mb-6 section-heading">Our <span class="blue-glow-text">Services</span></h2>
-                <p class="text-2xl text-gray-400 max-w-3xl mx-auto section-heading">
+                <p class="text-base md:text-2xl text-gray-400 max-w-3xl mx-auto section-heading">
                     Comprehensive electrical solutions for every need
                 </p>
             </div>
@@ -452,26 +455,26 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="relative px-6 py-40" style="position: relative; z-index: 10;">
+    <section class="relative px-6 py-16 md:py-40" style="position: relative; z-index: 10;">
         <div class="max-w-5xl mx-auto cta-section" style="position: relative;">
             <div class="text-center cta-content" style="position: relative; z-index: 1;">
-                <h2 class="text-4xl md:text-6xl font-bold mb-8">
+                <h2 class="text-3xl md:text-6xl font-bold mb-6 md:mb-8">
                     Ready to <span class="blue-glow-text">Get Started?</span>
                 </h2>
-                <p class="text-2xl text-gray-400 mb-12 max-w-3xl mx-auto">
+                <p class="text-base md:text-2xl text-gray-400 mb-8 md:mb-12 max-w-3xl mx-auto">
                     Contact us today for a free quote and experience the Arclight difference
                 </p>
-                <div class="flex flex-wrap gap-6 justify-center">
-                    <a href="/contact.html"><button class="btn-primary pulse-glow">Request a Quote</button></a>
-                    <a href="tel:1300000000"><button class="btn-secondary">Call 1300 ARC LIGHT</button></a>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <a href="/contact.html" class="w-full sm:w-auto"><button class="btn-primary pulse-glow w-full sm:w-auto">Request a Quote</button></a>
+                    <a href="tel:1300000000" class="w-full sm:w-auto"><button class="btn-secondary w-full sm:w-auto">Call 1300 ARC LIGHT</button></a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="relative border-t border-white/5 mt-20" style="position: relative; z-index: 10;">
-        <div class="max-w-6xl mx-auto px-6 py-16 text-center text-gray-500">
+    <footer class="relative border-t border-white/5 mt-10 md:mt-20" style="position: relative; z-index: 10;">
+        <div class="max-w-6xl mx-auto px-6 py-8 md:py-16 text-center text-gray-500">
             <p>&copy; 2024 Arclight Electrical Services. Sydney, Australia.</p>
         </div>
     </footer>
